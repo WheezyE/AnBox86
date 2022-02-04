@@ -252,7 +252,8 @@ function run_InjectSecondStageInstaller()
 			echo 'echo ""' | sudo tee -a ~/.bashrc >/dev/null
 			
 			Green=$'\e[1;32m'
-			echo -e "$Green\nAnBox86_64 installation complete.\n"
+			White=$'\e[1;37m'
+			echo -e "${Green}\nAnBox86_64 installation complete.\nLaunch AnBox86_64 with ${White}./launch_anbox86-64.sh\n"
 			
 		EOT
 		# The above commands were pushed into the 'user' account while we were in 'root'. So now that these commands are done, we will still be in 'root'.

@@ -122,18 +122,18 @@ function run_InjectSecondStageInstaller()
 			
 			mkdir downloads; cd downloads
 				# Wine download links from WineHQ: https://dl.winehq.org/wine-builds/
-				# TODO: Update wine to 6.0 or higher - check box86 compatability
-				LNK1="https://dl.winehq.org/wine-builds/debian/dists/bullseye/main/binary-amd64/"
-				DEB1="wine-stable-amd64_5.0.0~bullseye_amd64.deb" #wine64 supporting files
-					#DEB1="wine-stable-amd64_6.0.2~bullseye-1_amd64.deb"
-				DEB2="wine-stable_5.0.0~bullseye_amd64.deb" #wine64 main binary file
-					#DEB2="wine-stable_6.0.2~bullseye-1_amd64.deb"
-				#DEB3="winehq-stable_5.0.0~bullseye_amd64.deb" #mostly contains desktop shortcuts and docs?
-				LNK2="https://dl.winehq.org/wine-builds/debian/dists/bullseye/main/binary-i386/"
-				DEB4="wine-stable-i386_5.0.0~bullseye_i386.deb" #wine main binary file
-					#DEB4="wine-stable-i386_6.0.2~bullseye-1_i386.deb"
-				#DEB5="wine-stable_5.0.0~bullseye_i386.deb" #wine supporting files - CONFLICTS WITH wine64 supporting files
-				#DEB6="winehq-stable_5.0.0~bullseye_i386.deb" #mostly contains desktop shortcuts and docs?
+				branch="devel"
+				version="7.1"
+				dist="bullseye"
+				tag="-1"
+				LNK1="https://dl.winehq.org/wine-builds/debian/dists/${dist}/main/binary-amd64/"
+				DEB1="wine-${branch}-amd64_${version}~${dist}${tag}_amd64.deb" #wine64 supporting files
+				DEB2="wine-${branch}_${version}~${dist}${tag}_amd64.deb" #wine64 main binary file
+				#DEB3="winehq-${branch}_${version}~${dist}${tag}_amd64.deb" #mostly contains desktop shortcuts and docs?
+				LNK2="https://dl.winehq.org/wine-builds/debian/dists/${dist}/main/binary-i386/"
+				DEB4="wine-${branch}-i386_${version}~${dist}${tag}_i386.deb" #wine main binary file
+				#DEB5="wine-${branch}_${version}~${dist}${tag}_i386.deb" #wine supporting files - CONFLICTS WITH wine64 supporting files
+				#DEB6="winehq-${branch}_${version}~${dist}${tag}_i386.deb" #mostly contains desktop shortcuts and docs?
 					
 				# Download, extract wine, and install wine
 				echo "Downloading wine . . ."
@@ -156,9 +156,9 @@ function run_InjectSecondStageInstaller()
 			
 			# Give PRoot an X server ('screen 1') to send video to (and don't stop the X server after last client logs off)
 			sudo apt install xserver-xephyr -y
-			echo -e >> ~/.bashrc "\n# Initialize X server every time user logs in"
+			echo -e >> ~/.bashrc "\n# Silently initialize X server every time user logs in"
 			echo >> ~/.bashrc "export DISPLAY=localhost:0"
-			echo >> ~/.bashrc "sudo Xephyr :1 -noreset -fullscreen &"
+			echo >> ~/.bashrc "sudo Xephyr :1 -noreset -fullscreen 2>/dev/null &"
 			echo >> ~/.bashrc ""
 			
 			# Make scripts and symlinks to transparently run wine with box86 (since we don't have binfmt_misc available)
@@ -172,7 +172,7 @@ function run_InjectSecondStageInstaller()
 			echo -e '' | sudo tee -a /usr/local/bin/wine64 >/dev/null
 			echo -e '# Initialize X server on screen 1 ("&" continue running more commands)' | sudo tee -a /usr/local/bin/wine64 >/dev/null
 			echo -e '#  - Note that envvar PULSE_SERVER is not needed (like XServer XSDL suggests) because Termux uses its own Pulseaudio package' | sudo tee -a /usr/local/bin/wine64 >/dev/null
-			echo -e 'DISPLAY=localhost:0 sudo Xephyr :1 -noreset -fullscreen &' | sudo tee -a /usr/local/bin/wine64 >/dev/null
+			echo -e 'DISPLAY=localhost:0 sudo Xephyr :1 -noreset -fullscreen 2>/dev/null &' | sudo tee -a /usr/local/bin/wine64 >/dev/null
 			echo -e '' | sudo tee -a /usr/local/bin/wine64 >/dev/null
 			echo -e '# When this wine script is called, launch wine desktop with box64 and pass arguments to wine (then wait for wine session to finish)' | sudo tee -a /usr/local/bin/wine64 >/dev/null
 			echo -e '# - TODO: find a way to detect device resolution and put that into here as a variable' | sudo tee -a /usr/local/bin/wine64 >/dev/null
@@ -190,7 +190,7 @@ function run_InjectSecondStageInstaller()
 			echo -e '' | sudo tee -a /usr/local/bin/wine >/dev/null
 			echo -e '# Initialize X server on screen 1 ("&" continue running more commands)' | sudo tee -a /usr/local/bin/wine >/dev/null
 			echo -e '#  - Note that envvar PULSE_SERVER is not needed (like XServer XSDL suggests) because Termux uses its own Pulseaudio package' | sudo tee -a /usr/local/bin/wine >/dev/null
-			echo -e 'DISPLAY=localhost:0 sudo Xephyr :1 -noreset -fullscreen &' | sudo tee -a /usr/local/bin/wine >/dev/null
+			echo -e 'DISPLAY=localhost:0 sudo Xephyr :1 -noreset -fullscreen 2>/dev/null &' | sudo tee -a /usr/local/bin/wine >/dev/null
 			echo -e '' | sudo tee -a /usr/local/bin/wine >/dev/null
 			echo -e '# When this wine script is called, launch wine desktop with box86 and pass arguments to wine (then wait for wine session to finish)' | sudo tee -a /usr/local/bin/wine >/dev/null
 			echo -e '# - TODO: find a way to detect device resolution and put that into here as a variable' | sudo tee -a /usr/local/bin/wine >/dev/null

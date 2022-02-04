@@ -13,6 +13,9 @@ A script to install box86/box64 and wine/wine64 on a Termux PRoot for arm64 Andr
 curl https://raw.githubusercontent.com/lowspecman420/AnBox86/main/AnBox86_64.sh | bash
 ```
 
+4- In Termux, type `./launch_anbox86-64.sh` to launch AnBox86_64
+
+
 # Projects used
 
 Box86 & Box64 by ptitseb https://github.com/ptitSeb/box86
